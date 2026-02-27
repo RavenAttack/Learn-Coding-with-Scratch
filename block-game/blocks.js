@@ -61,7 +61,6 @@ export function defineGameBlocks(Blockly) {
       this.setMovable(false);
       this.setNextStatement(false);
       this.setPreviousStatement(false);
-
       attachHintUpdater(this, () => '/* game starts */');
     },
   };
@@ -77,7 +76,6 @@ export function defineGameBlocks(Blockly) {
       this.setColour(120);
       this.setTooltip('Run the blocks inside this block N times.');
       this.setHelpUrl('');
-
       attachHintUpdater(this, () => {
         const times = getNumericValuePreview(this, 'TIMES', '10');
         return `for (let i = 0; i < ${times}; i++) { ... }`;
@@ -95,7 +93,6 @@ export function defineGameBlocks(Blockly) {
       this.setColour(210);
       this.setTooltip('Move the player square by x and y pixels.');
       this.setHelpUrl('');
-
       attachHintUpdater(this, () => {
         const dx = getNumericValuePreview(this, 'DX', '10');
         const dy = getNumericValuePreview(this, 'DY', '0');
@@ -113,7 +110,6 @@ export function defineGameBlocks(Blockly) {
       this.setColour(25);
       this.setTooltip('Pause game logic for a number of seconds.');
       this.setHelpUrl('');
-
       attachHintUpdater(this, () => {
         const seconds = getNumericValuePreview(this, 'SECONDS', '1');
         return `await waitSeconds(${seconds});`;

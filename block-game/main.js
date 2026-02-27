@@ -135,7 +135,6 @@ async function runCode() {
   const generatedCode = generateJavaScript(workspace);
   codeOutput.hidden = false;
   codeOutput.textContent = generatedCode;
-
   state.playerX = 30;
   state.playerY = 120;
   drawScene();
