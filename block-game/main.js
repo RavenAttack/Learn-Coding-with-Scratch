@@ -1,9 +1,14 @@
-import { defineGameBlocks } from './blocks.js';
+import {
+  defineGameBlocks,
+  setBlockHintLanguage,
+  refreshAllBlockHints,
+} from './blocks.js';
 import { generateJavaScript } from './generators/javascript.js';
 import { generatePython } from './generators/python.js';
 import { generateCpp } from './generators/cpp.js';
 
 defineGameBlocks(Blockly);
+setBlockHintLanguage('javascript');
 
 const workspace = Blockly.inject('blocklyDiv', {
   toolbox: document.getElementById('toolbox'),
@@ -132,9 +137,17 @@ function getCodeByLanguage(language) {
 }
 
 async function runCode() {
-  const generatedCode = generateJavaScript(workspace);
+  const selectedLanguage = languageSelect.value;
+  const generatedCode = getCodeByLanguage(selectedLanguage);
   codeOutput.hidden = false;
   codeOutput.textContent = generatedCode;
+
+  if (selectedLanguage !== 'javascript') {
+    codeOutput.textContent +=
+      '\n\n[Info]\nRuntime execution is currently available for JavaScript only.';
+    return;
+  }
+
   state.playerX = 30;
   state.playerY = 120;
   drawScene();
@@ -148,12 +161,25 @@ async function runCode() {
   }
 }
 
+function applyLanguageToBlocks(language) {
+  setBlockHintLanguage(language);
+  refreshAllBlockHints(workspace);
+}
+
 runBtn.addEventListener('click', runCode);
 
 viewCodeBtn.addEventListener('click', () => {
-  const code = getCodeByLanguage(languageSelect.value);
+  const selectedLanguage = languageSelect.value;
+  applyLanguageToBlocks(selectedLanguage);
+
+  const code = getCodeByLanguage(selectedLanguage);
   codeOutput.hidden = false;
   codeOutput.textContent = code;
 });
 
+languageSelect.addEventListener('change', () => {
+  applyLanguageToBlocks(languageSelect.value);
+});
+
+applyLanguageToBlocks(languageSelect.value);
 drawScene();
