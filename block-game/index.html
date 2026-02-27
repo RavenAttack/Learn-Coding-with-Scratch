@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Block Game Starter</title>
+    <link rel="stylesheet" href="./style.css" />
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>🎮 Block Game Starter</h1>
+      <div class="actions">
+        <button id="runBtn" type="button">Run</button>
+        <button id="viewCodeBtn" type="button">View Code</button>
+        <select id="languageSelect" aria-label="Language selection">
+          <option value="javascript">JavaScript</option>
+          <option value="python">Python (placeholder)</option>
+          <option value="cpp">C++ (placeholder)</option>
+        </select>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="workspace-panel">
+        <div id="blocklyDiv" aria-label="Blockly workspace"></div>
+      </section>
+
+      <section class="game-panel">
+        <canvas id="gameCanvas" width="420" height="300"></canvas>
+        <pre id="codeOutput" hidden></pre>
+      </section>
+    </main>
+
+    <xml id="toolbox" style="display: none">
+      <category name="Game" colour="#7e57c2">
+        <block type="when_game_starts"></block>
+        <block type="repeat_n_times"></block>
+        <block type="move_player_by"></block>
+        <block type="wait_seconds"></block>
+      </category>
+
+      <category name="Math" categorystyle="math_category"></category>
+      <category name="Variables" categorystyle="variable_category"></category>
+      <category name="Logic" categorystyle="logic_category"></category>
+      <category name="Text" categorystyle="text_category"></category>
+    </xml>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

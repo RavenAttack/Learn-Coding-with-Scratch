@@ -1,0 +1,117 @@
+:root {
+  --bg: #141926;
+  --panel: #1f2435;
+  --panel-border: #2e344b;
+  --text: #f2f5ff;
+  --accent: #43a0ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+button,
+select {
+  border: 1px solid #3a4666;
+  background: #252d43;
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.92rem;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:hover {
+  background: #304065;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  height: calc(100vh - 58px);
+}
+
+.workspace-panel,
+.game-panel {
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--panel);
+}
+
+#blocklyDiv {
+  width: 100%;
+  height: 100%;
+}
+
+.game-panel {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+#gameCanvas {
+  width: 100%;
+  height: auto;
+  background: #0c1020;
+  border-bottom: 1px solid var(--panel-border);
+  touch-action: none;
+}
+
+#codeOutput {
+  margin: 0;
+  padding: 0.75rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.86rem;
+}
+
+/* Blockly theming for dark workspace + light blocks */
+.blocklyMainBackground {
+  stroke: transparent;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+    height: auto;
+  }
+
+  #blocklyDiv {
+    min-height: 55vh;
+  }
+}
