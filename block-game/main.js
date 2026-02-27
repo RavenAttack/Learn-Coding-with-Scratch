@@ -1,17 +1,14 @@
 import { defineGameBlocks } from './blocks.js';
-import {
-  registerJavaScriptGenerators,
-  generateJavaScript,
-} from './generators/javascript.js';
+import { generateJavaScript } from './generators/javascript.js';
 import { generatePython } from './generators/python.js';
 import { generateCpp } from './generators/cpp.js';
 
 defineGameBlocks(Blockly);
-const jsGenerator = registerJavaScriptGenerators(Blockly);
 
 const workspace = Blockly.inject('blocklyDiv', {
   toolbox: document.getElementById('toolbox'),
   trashcan: true,
+  renderer: 'zelos',
   grid: {
     spacing: 24,
     length: 3,
@@ -21,7 +18,7 @@ const workspace = Blockly.inject('blocklyDiv', {
   zoom: {
     controls: true,
     wheel: true,
-    startScale: 1,
+    startScale: 0.95,
     maxScale: 2,
     minScale: 0.5,
     scaleSpeed: 1.1,
@@ -70,7 +67,7 @@ Blockly.Xml.domToWorkspace(
                 <next>
                   <block type="wait_seconds">
                     <value name="SECONDS">
-                      <shadow type="math_number"><field name="NUM">0.3</field></shadow>
+                      <shadow type="math_number"><field name="NUM">0.25</field></shadow>
                     </value>
                   </block>
                 </next>
@@ -131,15 +128,13 @@ function waitSeconds(seconds) {
 function getCodeByLanguage(language) {
   if (language === 'python') return generatePython(workspace);
   if (language === 'cpp') return generateCpp(workspace);
-  return generateJavaScript(workspace, jsGenerator);
+  return generateJavaScript(workspace);
 }
 
 async function runCode() {
-  const generatedCode = generateJavaScript(workspace, jsGenerator);
+  const generatedCode = generateJavaScript(workspace);
   codeOutput.hidden = false;
   codeOutput.textContent = generatedCode;
-
-  // Reset player for each run.
   state.playerX = 30;
   state.playerY = 120;
   drawScene();
@@ -156,8 +151,7 @@ async function runCode() {
 runBtn.addEventListener('click', runCode);
 
 viewCodeBtn.addEventListener('click', () => {
-  const language = languageSelect.value;
-  const code = getCodeByLanguage(language);
+  const code = getCodeByLanguage(languageSelect.value);
   codeOutput.hidden = false;
   codeOutput.textContent = code;
 });

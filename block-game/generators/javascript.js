@@ -1,34 +1,69 @@
 /**
- * JavaScript generator setup for custom blocks.
+ * Lightweight JavaScript generator for custom Blockly game blocks.
+ * This avoids relying on optional Blockly language generator bundles.
  */
-export function registerJavaScriptGenerators(Blockly) {
-  const generator = Blockly.JavaScript;
 
-  generator.forBlock.when_game_starts = function (block, gen) {
-    const body = gen.statementToCode(block, 'DO');
-    return `// when game starts\n${body}`;
-  };
+function expressionToJavaScript(block) {
+  if (!block) return '0';
 
-  generator.forBlock.repeat_n_times = function (block, gen) {
-    const times = gen.valueToCode(block, 'TIMES', gen.ORDER_NONE) || '0';
-    const body = gen.statementToCode(block, 'DO');
-    return `for (let count = 0; count < ${times}; count++) {\n${body}}\n`;
-  };
+  if (block.type === 'math_number') {
+    return String(block.getFieldValue('NUM') ?? 0);
+  }
 
-  generator.forBlock.move_player_by = function (block, gen) {
-    const dx = gen.valueToCode(block, 'DX', gen.ORDER_NONE) || '0';
-    const dy = gen.valueToCode(block, 'DY', gen.ORDER_NONE) || '0';
-    return `movePlayerBy(${dx}, ${dy});\n`;
-  };
+  if (block.type === 'variables_get') {
+    return String(block.getFieldValue('VAR') || 'playerVar');
+  }
 
-  generator.forBlock.wait_seconds = function (block, gen) {
-    const seconds = gen.valueToCode(block, 'SECONDS', gen.ORDER_NONE) || '0';
-    return `await waitSeconds(${seconds});\n`;
-  };
+  if (block.type === 'math_arithmetic') {
+    const op = block.getFieldValue('OP') || 'ADD';
+    const operators = {
+      ADD: '+',
+      MINUS: '-',
+      MULTIPLY: '*',
+      DIVIDE: '/',
+      POWER: '**',
+    };
+    const left = expressionToJavaScript(block.getInputTargetBlock('A'));
+    const right = expressionToJavaScript(block.getInputTargetBlock('B'));
+    return `(${left} ${operators[op] || '+'} ${right})`;
+  }
 
-  return generator;
+  return '0';
 }
 
-export function generateJavaScript(workspace, generator) {
-  return generator.workspaceToCode(workspace);
+function statementToJavaScript(block, indent = '  ') {
+  if (!block) return '';
+
+  let line = '';
+  switch (block.type) {
+    case 'repeat_n_times': {
+      const times = expressionToJavaScript(block.getInputTargetBlock('TIMES'));
+      const inner = statementToJavaScript(block.getInputTargetBlock('DO'), `${indent}  `);
+      line = `${indent}for (let i = 0; i < ${times}; i++) {\n${inner}${indent}}\n`;
+      break;
+    }
+    case 'move_player_by': {
+      const dx = expressionToJavaScript(block.getInputTargetBlock('DX'));
+      const dy = expressionToJavaScript(block.getInputTargetBlock('DY'));
+      line = `${indent}movePlayerBy(${dx}, ${dy});\n`;
+      break;
+    }
+    case 'wait_seconds': {
+      const seconds = expressionToJavaScript(block.getInputTargetBlock('SECONDS'));
+      line = `${indent}await waitSeconds(${seconds});\n`;
+      break;
+    }
+    default:
+      line = `${indent}// Unsupported block: ${block.type}\n`;
+  }
+
+  return line + statementToJavaScript(block.getNextBlock(), indent);
+}
+
+export function generateJavaScript(workspace) {
+  const root = workspace.getTopBlocks(true).find((block) => block.type === 'when_game_starts');
+  if (!root) return '// Add a "when game starts" block to generate code.\n';
+
+  const body = statementToJavaScript(root.getInputTargetBlock('DO'));
+  return `// Generated JavaScript\n${body}`;
 }

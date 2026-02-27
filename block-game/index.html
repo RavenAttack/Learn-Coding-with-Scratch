@@ -3,20 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Block Game Starter</title>
+    <title>Blockly Game Platform Prototype</title>
     <link rel="stylesheet" href="./style.css" />
     <script src="https://unpkg.com/blockly/blockly.min.js"></script>
   </head>
   <body>
     <header class="topbar">
-      <h1>🎮 Block Game Starter</h1>
+      <h1>🎮 Blockly Game Platform (Beta+)</h1>
       <div class="actions">
         <button id="runBtn" type="button">Run</button>
         <button id="viewCodeBtn" type="button">View Code</button>
         <select id="languageSelect" aria-label="Language selection">
           <option value="javascript">JavaScript</option>
-          <option value="python">Python (placeholder)</option>
-          <option value="cpp">C++ (placeholder)</option>
+          <option value="python">Python</option>
+          <option value="cpp">C++</option>
         </select>
       </div>
     </header>
@@ -35,15 +35,32 @@
     <xml id="toolbox" style="display: none">
       <category name="Game" colour="#7e57c2">
         <block type="when_game_starts"></block>
-        <block type="repeat_n_times"></block>
-        <block type="move_player_by"></block>
-        <block type="wait_seconds"></block>
+        
+        <block type="repeat_n_times">
+          <value name="TIMES">
+            <shadow type="math_number"><field name="NUM">5</field></shadow>
+          </value>
+        </block>
+
+        <block type="move_player_by">
+          <value name="DX">
+            <shadow type="math_number"><field name="NUM">20</field></shadow>
+          </value>
+          <value name="DY">
+            <shadow type="math_number"><field name="NUM">0</field></shadow>
+          </value>
+        </block>
+
+        <block type="wait_seconds">
+          <value name="SECONDS">
+            <shadow type="math_number"><field name="NUM">0.3</field></shadow>
+          </value>
+        </block>
       </category>
 
       <category name="Math" categorystyle="math_category"></category>
       <category name="Variables" categorystyle="variable_category"></category>
       <category name="Logic" categorystyle="logic_category"></category>
-      <category name="Text" categorystyle="text_category"></category>
     </xml>
 
     <script type="module" src="./main.js"></script>
